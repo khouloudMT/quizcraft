@@ -1,0 +1,21 @@
+type Question {
+  id: ID!
+  text: String!
+  options: [String!]
+  correctAnswer: String!
+}
+
+type Quiz {
+  id: ID!
+  title: String!
+  questions: [Question!]!
+}
+
+input QuizInput {
+  title: String!
+  questions: [QuestionInput!]!
+}
+
+extend type Mutation {
+  createQuiz(input: QuizInput!): Quiz!
+}
