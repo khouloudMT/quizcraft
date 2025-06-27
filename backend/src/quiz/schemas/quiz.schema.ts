@@ -1,25 +1,7 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-
-@Schema()
-@ObjectType()
-export class Quiz extends Document {
-
-  @Field(() => ID)  // Make sure this decorator exists
-  declare id: string;
-  
-  @Prop({ required: true })
-  @Field()
-  title: string;
-
-  @Field(() => [Question]) // <-- Add this decorator
-  @Prop({ type: [Object], required: true })
-  questions: Question[];
-}
-
-export const QuizSchema = SchemaFactory.createForClass(Quiz);
-export type QuizDocument = Quiz & Document;
+import { Document, Schema as MongooseSchema } from 'mongoose';
+import { User } from '../../user/schemas/user.schema';
 
 @ObjectType()
 export class Question {
@@ -32,3 +14,29 @@ export class Question {
   @Field()
   correctAnswer: string;
 }
+
+@Schema()
+@ObjectType()
+export class Quiz extends Document {
+  @Field(() => ID)
+  declare _id: string;
+
+  @Prop({ required: true })
+  @Field()
+  title: string;
+
+  @Prop({ type: [Object], required: true })
+  @Field(() => [Question])
+  questions: Question[];
+
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })
+  @Field(() => User)
+  creator: User;
+
+  @Prop({ default: Date.now })
+  @Field()
+  createdAt: Date;
+}
+
+export const QuizSchema = SchemaFactory.createForClass(Quiz);
+export type QuizDocument = Quiz & Document;
