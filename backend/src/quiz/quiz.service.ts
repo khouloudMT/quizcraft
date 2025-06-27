@@ -12,7 +12,7 @@ export class QuizService {
 
     async create(quizInput: QuizInput): Promise<Quiz> {
         const newQuiz = new this.quizModel(quizInput);
-        return newQuiz.save(); // Si vous utilisez Mongoose
+        return newQuiz.save(); 
     }
     async findAll(): Promise<Quiz[]> {
     return this.quizModel.find().exec();
